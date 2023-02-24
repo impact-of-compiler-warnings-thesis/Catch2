@@ -30,7 +30,7 @@ jobs:
                    -DCATCH_BUILD_TESTING=ON \
                    -DCATCH_BUILD_EXAMPLES=ON \
                    -DCATCH_BUILD_EXTRA_TESTS=ON \
-                   -DCATCH_BUILD_FUZZERS=ON
+                   -DCATCH_BUILD_FUZZERS=OFF
       - name: Run build-wrapper
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} ninja -C build
