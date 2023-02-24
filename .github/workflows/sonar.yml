@@ -17,13 +17,22 @@ jobs:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v1
-      - name: Run build-wrapper
+      - name: Install system dependencies
         run: |
           sudo apt install ninja-build
-          mkdir build
-          cd build
-          cmake .. -GNinja -DCATCH_INSTALL_EXTRAS=On -DCATCH_DEVELOPMENT_BUILD=On
-          cd ..
+      - name: Generate build files
+        run: |
+          mkdir build && cd build
+          cmake .. -GNinja \
+                   -DCMAKE_BUILD_TYPE=Debug \
+                   -DCATCH_INSTALL_EXTRAS=ON \
+                   -DCATCH_DEVELOPMENT_BUILD=ON \
+                   -DCATCH_BUILD_TESTING=ON \
+                   -DCATCH_BUILD_EXAMPLES=ON \
+                   -DCATCH_BUILD_EXTRA_TESTS=ON \
+                   -DCATCH_BUILD_FUZZERS=ON
+      - name: Run build-wrapper
+        run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} ninja -C build
       - name: Run sonar-scanner
         env:
